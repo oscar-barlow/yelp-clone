@@ -8,5 +8,6 @@
 
   %body
     - flash.each do |key, value|
-      %p= value
+      %div
+        %p= value
     = yield
