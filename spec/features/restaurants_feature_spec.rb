@@ -1,13 +1,19 @@
 require 'rails_helper'
 
-feature 'restaurants' do
+feature 'Restaurants' do
   context 'no restaurants have been added' do
+
+    scenario 'user cannot add a restaurant if not logged in' do
+      visit '/restaurants/new'
+      expect(page).to have_content("You need to sign in or sign up before continuing.")
+    end
 
     scenario 'should display a prompt to add a restaurant' do
       visit '/restaurants'
       expect(page).to have_content 'No restaurants yet'
       expect(page).to have_link 'Add a restaurant'
     end
+
   end
 
   context 'restaurants have been added' do
@@ -23,6 +29,15 @@ feature 'restaurants' do
   end
 
   context 'creating restaurants' do
+
+    before do
+      visit '/users/sign_up'
+      fill_in('Email', with: 'test@example.com')
+      fill_in('Password', with: 'testtest')
+      fill_in('Password confirmation', with: 'testtest')
+      click_button('Sign up')
+    end
+
     scenario 'prompts user to fill out a form, then displays the new restaurant' do
       visit "/restaurants"
       click_link "Add a restaurant"
@@ -40,7 +55,6 @@ feature 'restaurants' do
 
       expect(page).not_to have_css 'h2', text: 'kf'
       expect(page).to have_content 'error'
-
     end
   end
 
@@ -57,7 +71,15 @@ feature 'restaurants' do
   end
 
   context 'editing restaurants' do
-    before {Restaurant.create name: "KFC", description: "Deep fried goodness"}
+
+    before do
+      Restaurant.create name: "KFC", description: "Deep fried goodness"
+      visit '/users/sign_up'
+      fill_in('Email', with: 'test@example.com')
+      fill_in('Password', with: 'testtest')
+      fill_in('Password confirmation', with: 'testtest')
+      click_button('Sign up')
+    end
 
     scenario "let a user edit a restaurant" do
       visit('/restaurants')
@@ -73,7 +95,14 @@ feature 'restaurants' do
 
   context 'deleting restaurants' do
 
-    before {Restaurant.create name: "KFC", description: "Deep fried goodness"}
+    before do
+      Restaurant.create name: "KFC", description: "Deep fried goodness"
+      visit '/users/sign_up'
+      fill_in('Email', with: 'test@example.com')
+      fill_in('Password', with: 'testtest')
+      fill_in('Password confirmation', with: 'testtest')
+      click_button('Sign up')
+    end
 
     scenario "removes a restaurant when a user clicks a delete link" do
       visit '/restaurants'
