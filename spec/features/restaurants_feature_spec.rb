@@ -91,6 +91,7 @@ feature 'Restaurants' do
       expect(page).to have_content "Deep fried goodness"
       expect(current_path).to eq "/restaurants"
     end
+
   end
 
   context 'deleting restaurants' do
