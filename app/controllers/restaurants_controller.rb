@@ -12,6 +12,7 @@ class RestaurantsController < ApplicationController
 
   def create
     @restaurant = Restaurant.new(restaurant_params)
+    @restaurant.user_id = current_user.id
     if @restaurant.save
       redirect_to restaurants_path
     else
@@ -25,6 +26,10 @@ class RestaurantsController < ApplicationController
 
   def edit
     @restaurant = Restaurant.find(params[:id])
+    if current_user.id != @restaurant.user_id
+      flash[:notice] = "Cannot edit a restaurant you did not create"
+      redirect_to root_path
+    end
   end
 
   def update
