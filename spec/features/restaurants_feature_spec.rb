@@ -73,15 +73,29 @@ feature 'Restaurants' do
   context 'editing restaurants' do
 
     before do
-      Restaurant.create name: "KFC", description: "Deep fried goodness"
       visit '/users/sign_up'
       fill_in('Email', with: 'test@example.com')
       fill_in('Password', with: 'testtest')
       fill_in('Password confirmation', with: 'testtest')
       click_button('Sign up')
+      click_link('Add a restaurant')
+      fill_in "restaurant[name]", with: "KFC"
+      click_button "Create Restaurant"
     end
 
-    scenario "let a user edit a restaurant" do
+    scenario "prevent a different user from editing a restaurant" do
+      click_link('Sign out')
+      visit '/users/sign_up'
+      fill_in('Email', with: 'oscar@oscar.com')
+      fill_in('Password', with: 'oscar123')
+      fill_in('Password confirmation', with: 'oscar123')
+      click_button('Sign up')
+      click_link("Edit KFC")
+      expect(page).to have_content "Cannot edit or delete a restaurant you did not create"
+      expect(current_path).to eq "/"
+    end
+
+    scenario "let a user edit a restaurant they created" do
       visit('/restaurants')
       click_link("Edit KFC")
       fill_in('Name', with: "Kentucky Fried Chicken")
@@ -91,23 +105,26 @@ feature 'Restaurants' do
       expect(page).to have_content "Deep fried goodness"
       expect(current_path).to eq "/restaurants"
     end
+
   end
 
   context 'deleting restaurants' do
 
     before do
-      Restaurant.create name: "KFC", description: "Deep fried goodness"
       visit '/users/sign_up'
       fill_in('Email', with: 'test@example.com')
       fill_in('Password', with: 'testtest')
       fill_in('Password confirmation', with: 'testtest')
       click_button('Sign up')
+      click_link('Add a restaurant')
+      fill_in "restaurant[name]", with: "Burger King"
+      click_button "Create Restaurant"
     end
 
     scenario "removes a restaurant when a user clicks a delete link" do
       visit '/restaurants'
-      click_link 'Delete KFC'
-      expect(page).not_to have_content("KFC")
+      click_link 'Delete Burger King'
+      expect(page).not_to have_content("Burger King")
       expect(page).to have_content("Restaurant deleted successfully")
     end
 
