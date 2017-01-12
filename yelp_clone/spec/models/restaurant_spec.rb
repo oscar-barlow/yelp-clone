@@ -17,6 +17,6 @@ it 'is not valid with a name of less than three characters' do
   end
 
     it {is_expected.to belong_to :user}
-
+    it {is_expected.to have_many :reviews}
 
 end
