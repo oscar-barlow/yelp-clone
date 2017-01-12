@@ -36,6 +36,17 @@ feature 'restaurants' do
       expect(page).to have_content 'Deep fried goodness'
     end
 
+    scenario 'let a user edit a restaurant' do
+      visit '/restaurants'
+      click_link 'Edit KFC'
+      fill_in 'Name', with: 'Kentucky Fried Chicken'
+      fill_in 'Description', with: 'Torture food'
+      click_button 'Update Restaurant'
+      click_link 'Kentucky Fried Chicken'
+      expect(page).to have_content 'Kentucky Fried Chicken'
+      expect(page).to have_content 'Torture food'
+    end
+
   end
 
   context 'creating restaurants' do
@@ -53,18 +64,6 @@ feature 'restaurants' do
   context 'editing restaurants' do
 
     before { Restaurant.create name: 'KFC', description: 'Deep fried goodness', id: 1 }
-    scenario 'let a user edit a restaurant' do
-      sign_up
-      visit '/restaurants'
-      click_link 'Edit KFC'
-      fill_in 'Name', with: 'Kentucky Fried Chicken'
-      fill_in 'Description', with: 'Deep fried goodness'
-      click_button 'Update Restaurant'
-      click_link 'Kentucky Fried Chicken'
-      expect(page).to have_content 'Kentucky Fried Chicken'
-      expect(page).to have_content 'Deep fried goodness'
-      expect(current_path).to eq '/restaurants/1'
-    end
   end
 
   context 'deleting restaurants' do
