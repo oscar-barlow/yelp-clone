@@ -15,7 +15,12 @@ feature 'restaurants' do
 
  context 'restaurants have been added' do
    before do
-     Restaurant.create(name: 'KFC')
+     sign_up
+     visit '/restaurants'
+     click_link 'Add a restaurant'
+     fill_in 'Name', with: 'KFC'
+     fill_in 'Description', with: 'Deep fried goodness'
+     click_button 'Create Restaurant'
    end
 
    scenario 'display restuarants' do
@@ -23,6 +28,14 @@ feature 'restaurants' do
      expect(page).to have_content("KFC")
      expect(page).not_to have_content ('No restaurants yet')
     end
+
+    scenario 'lets a user view a restaurant' do
+      visit '/restaurants'
+      click_link 'KFC'
+      expect(page).to have_content 'KFC'
+      expect(page).to have_content 'Deep fried goodness'
+    end
+
   end
 
   context 'creating restaurants' do
@@ -34,19 +47,6 @@ feature 'restaurants' do
       click_button 'Create Restaurant'
       expect(page).to have_content 'KFC'
       expect(current_path).to eq '/restaurants'
-    end
-  end
-
-  context 'viewing restaurants' do
-
-    let!(:kfc){ Restaurant.create(name: 'KFC', description: 'Deep fried goodness') }
-
-    scenario 'lets a user view a restaurant' do
-      visit '/restaurants'
-      click_link 'KFC'
-      expect(page).to have_content 'KFC'
-      expect(page).to have_content 'Deep fried goodness'
-      expect(current_path).to eq "/restaurants/#{kfc.id}"
     end
   end
 
