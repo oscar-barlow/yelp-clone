@@ -30,7 +30,6 @@ class RestaurantsController < ApplicationController
   end
 
   def update
-    p params
     @restaurant = Restaurant.find(params[:id])
     @restaurant.update(restaurant_params)
 

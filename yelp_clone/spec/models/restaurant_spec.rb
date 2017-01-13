@@ -12,7 +12,6 @@ it 'is not valid with a name of less than three characters' do
     user = User.create( email: "test@test.com", password: "abcd1234")
     Restaurant.create( name: "Moe's Tavern", user_id: user.id )
     restaurant = Restaurant.new( name: "Moe's Tavern", user_id: user.id )
-    p restaurant.errors.full_messages
     expect(restaurant).to have(1).error_on(:name)
   end
 
