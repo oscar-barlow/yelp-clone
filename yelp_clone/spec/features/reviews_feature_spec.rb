@@ -3,11 +3,7 @@ require 'rails_helper'
 feature 'reviewing' do
   before do
     sign_up
-    visit '/restaurants'
-    click_link 'Add a restaurant'
-    fill_in 'Name', with: 'KFC'
-    fill_in 'Description', with: 'Deep fried goodness'
-    click_button 'Create Restaurant'
+    create_restaurant
   end
 
   scenario 'allows users to leave a review using a form' do
@@ -26,6 +22,11 @@ feature 'reviewing' do
     click_link 'Review KFC'
     fill_in "Thoughts", with: "Gets better with age"
     select '5', from: 'Rating'
+    click_button 'Leave Review'
+    visit '/restaurants'
+    click_link 'Review KFC'
+    fill_in "Thoughts", with: "Not such a fan any more"
+    select '1', from: 'Rating'
     expect{click_button 'Leave Review'}.to_not change{Review.count}
   end
 
