@@ -11,9 +11,11 @@ it 'is not valid with a name of less than three characters' do
   end
 
   it "is not valid unless it has a unique name" do
-    Restaurant.create(name: "Moe's Tavern", user_id: 1)
-    restaurant = Restaurant.create(name: "Moe's Tavern", user_id: 1)
-    expect(restaurant).to have(1).errors
+    user = User.create(email: "test@test.com", password: "test123")
+    Restaurant.create(name: "Moe's Tavern", user_id: user.id)
+    restaurant = Restaurant.create(name: "Moe's Tavern", user_id: user.id)
+    p restaurant.errors
+    expect(restaurant).to have(1).error_on(:name)
   end
 
     it {is_expected.to belong_to :user}
